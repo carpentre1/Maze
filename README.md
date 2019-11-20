@@ -1,6 +1,7 @@
 # Maze
- Generating mazes that are then visualized in Unity.
- 
+Generating mazes that are then visualized in Unity.
+
+
 This is my plan for creating a maze generator in C#, using Unity to visualize the maze. 
 
 Unfortunately, I had already looked around at maze generation concepts before you recommended that we go in blind, so my algorithm will be tainted by prior knowledge - but I didn’t look into it much, just got the general idea of how they go about it. 
@@ -11,15 +12,15 @@ Users will be able to enter a number N that will determine the maze size, and Un
 
 Pseudocode for how it will carve paths through the cells: 
 
-Mark an edge cell as ‘start’. From there, pick a neighbor cell and carve a path to it. Add this cell to the “visited” list. 
+1. Mark an edge cell as ‘start’. From there, pick a neighbor cell and carve a path to it. Add this cell to the “visited” list. 
 
-Pick a new neighbor from the current position that is unvisited. Carve a path. If the new neighbor is an edge cell and the algorithm has traveled more than N/2 times, mark this new neighbor as ‘end’. If not, keep repeating the process until this condition is met. 
+2. Pick a new neighbor from the current position that is unvisited. Carve a path. If the new neighbor is an edge cell and the algorithm has traveled more than N/2 times, mark this new neighbor as ‘end’. If not, keep repeating the process until this condition is met. 
 
-Travel backwards from the end cell to the next previously visited cell. If that cell has any unvisited neighbors: 
+3. Travel backwards from the end cell to the next previously visited cell. If that cell has any unvisited neighbors: 
 
-Pick an unvisited neighbor, carve a path to it, add it to the visited list. Repeat until there are no unvisited cells. 
+   Pick an unvisited neighbor, carve a path to it, add it to the visited list. Repeat until there are no unvisited cells. 
 
-Repeat step 3 until all cells along the path from start to end are exhausted. 
+4. Repeat step 3 until all cells along the path from start to end are exhausted. 
 
  
 
