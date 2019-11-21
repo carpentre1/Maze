@@ -28,5 +28,7 @@ I’m sure there are various flaws in this pseudocode that I’ll iron out while
 
 After writing some of the algorithm, I've already made a few changes to how it works: instead of stopping at an edge cell, it stops at an unvisited corner cell. This guarantees that the maze will travel a fair distance without needing to hold out for a certain number of steps, except for the extremely unlikely scenario that it travels directly from one corner to the other. I've also turned the algorithm into a coroutine and added numbers indicating its current number of cells visited, allowing me to watch it carve paths and backtrack in real time, which is helpful for observing where the algorithm falls apart.
 This is what mazes currently tend to look like:
-https://puu.sh/EGVZX/e9bfa2cfd4.png
+
+![Current Maze Visualization](https://github.com/carpentre1/Maze/blob/master/ss%20(2019-11-20%20at%2008.23.33).png)
+
 As it searches for the corner, it adds its visited cells to a queue. If it finds no more unvisited neighbor cells, it pops cells off the queue until there are new unvisited cells. It runs until it reaches a new corner and stops. All I need to add now is make it continue backtracking and exploring unvisited cells until all cells are visited.
