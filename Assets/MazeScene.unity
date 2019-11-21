@@ -152,6 +152,8 @@ MonoBehaviour:
   camera: {fileID: 101394388}
   cellPrefab: {fileID: 2211227424131831745, guid: 59978685a1cf9344e8fa7b47aa7032a1,
     type: 3}
+  mazeGenerationSpeed: 0.02
+  mazePathCarvingSpeed: 0.2
   pathCarvingSpeed: 1
   generationSpeed: 1
   desiredMazeSize: 17

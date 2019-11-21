@@ -8,6 +8,7 @@ public class Manager : MonoBehaviour
 
     public GameObject cellPrefab;
     List<GameObject> createdCells = new List<GameObject>();
+    List<GameObject> unvisitedCells = new List<GameObject>();
 
     //cells that the maze generating algorithm has visited
     List<GameObject> cellsToVisit = new List<GameObject>();
@@ -172,6 +173,30 @@ public class Manager : MonoBehaviour
             cellScript.CarvePath(nextCell);
         }
         nextCell.GetComponent<Cell>().CreateEnd();
+
+        //keep backtracking and filling in unvisited cells
+        while(cellScript.unvisitedNeighbors.Count != 0)
+        {
+            yield return new WaitForSeconds(mazePathCarvingSpeed);
+            visitedCells.Push(nextCell);
+            cellScript = nextCell.GetComponent<Cell>();
+            if (cellScript.unvisitedNeighbors.Count == 0)
+            {
+                Debug.Log("Backtracking from " + cellScript.gameObject.name);
+                visitedCells.Pop();
+                nextCell = (GameObject)visitedCells.Peek();
+                while (nextCell.GetComponent<Cell>().unvisitedNeighbors.Count == 0)
+                {
+                    visitedCells.Pop();
+                    nextCell = (GameObject)visitedCells.Peek();
+                    nextCell.GetComponent<Cell>().UpdateNeighbors();
+                }
+                continue;
+            }
+            nextCell = cellScript.unvisitedNeighbors[Random.Range(0, cellScript.neighbors.Count)];
+            nextCell.GetComponent<Cell>().UpdateNeighbors();
+            cellScript.CarvePath(nextCell);
+        }
     }
 
     void EstablishAllNeighbors()
