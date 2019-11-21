@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Cell : MonoBehaviour
 {
@@ -19,11 +20,16 @@ public class Cell : MonoBehaviour
     public GameObject startPrefab;
     public GameObject endPrefab;
 
+    public GameObject pathMarker;
+
     //references to the neighbor cells, assigned after all cells are placed
     public GameObject neighborNorth;
     public GameObject neighborSouth;
     public GameObject neighborEast;
     public GameObject neighborWest;
+
+    public List<GameObject> neighbors = new List<GameObject>();
+    public List<GameObject> unvisitedNeighbors = new List<GameObject>();
 
 
     private void Awake()
@@ -42,6 +48,12 @@ public class Cell : MonoBehaviour
         
     }
 
+    public void AddPathMarker(int n)
+    {
+        pathMarker.GetComponent<TextMeshPro>().text = n.ToString();
+        pathMarker.SetActive(true);
+    }
+
 
     public void EstablishNumber(int cellN)
     {
@@ -52,21 +64,21 @@ public class Cell : MonoBehaviour
     int NumberOfNeighbors()
     {
         int i = 0;
-        if (neighborNorth) { i++; }
+        if (neighborNorth) { i++;  }
         if (neighborSouth) { i++; }
         if (neighborEast) { i++; }
         if (neighborWest) { i++; }
         return i;
     }
 
-    bool IsEdge()
+    public bool IsEdge()
     {
         if (NumberOfNeighbors() == 3)
             return true;
         else return false;
     }
 
-    bool IsCorner()
+    public bool IsCorner()
     {
         if (NumberOfNeighbors() == 2)
             return true;
@@ -89,6 +101,54 @@ public class Cell : MonoBehaviour
         neighborSouth = neighborInDirection(wallSouth);
         neighborEast = neighborInDirection(wallEast);
         neighborWest = neighborInDirection(wallWest);
+
+        if (neighborNorth) { neighbors.Add(neighborNorth); }
+        if (neighborSouth) { neighbors.Add(neighborSouth); }
+        if (neighborEast) { neighbors.Add(neighborEast); }
+        if (neighborWest) { neighbors.Add(neighborWest); }
+
+        unvisitedNeighbors = neighbors;
+    }
+
+    public void UpdateNeighbors()
+    {
+        List<GameObject> cellsToRemove = new List<GameObject>();
+        foreach (GameObject c in unvisitedNeighbors)
+        {
+            if(c.GetComponent<Cell>().hasBeenVisited)
+            {
+                cellsToRemove.Add(c);
+            }
+        }
+        foreach(GameObject c in cellsToRemove)
+        {
+            unvisitedNeighbors.Remove(c);
+        }
+    }
+
+    public bool HasUnvisitedNeighbor()
+    {
+        if(neighborNorth)
+        {
+            if (!neighborNorth.GetComponent<Cell>().hasBeenVisited) { return true; }
+        }
+        if (neighborSouth)
+        {
+            if (!neighborSouth.GetComponent<Cell>().hasBeenVisited) { return true; }
+        }
+        if (neighborEast)
+        {
+            if (!neighborEast.GetComponent<Cell>().hasBeenVisited) { return true; }
+        }
+        if (neighborWest)
+        {
+            if (!neighborWest.GetComponent<Cell>().hasBeenVisited) { return true; }
+        }
+
+
+
+
+        return false;
     }
 
     /// <summary>
@@ -112,11 +172,44 @@ public class Cell : MonoBehaviour
         return null;
     }
 
+    public void CarvePath(GameObject neighbor)
+    {
+        Cell neighborCellScript = neighbor.GetComponent<Cell>();
+        hasBeenVisited = true;
+        neighborCellScript.hasBeenVisited = true;
+        manager.timesCarved++;
+        AddPathMarker(manager.timesCarved);
+        unvisitedNeighbors.Remove(neighbor);
+        neighborCellScript.unvisitedNeighbors.Remove(gameObject);
+        if (neighbor == neighborNorth)
+        {
+            neighborCellScript.RemoveWall(neighborCellScript.wallSouth);
+            RemoveWall(wallNorth);
+        }
+        if (neighbor == neighborSouth)
+        {
+            neighborCellScript.RemoveWall(neighborCellScript.wallNorth);
+            RemoveWall(wallSouth);
+        }
+        if (neighbor == neighborEast)
+        {
+            neighborCellScript.RemoveWall(neighborCellScript.wallWest);
+            RemoveWall(wallEast);
+        }
+        if (neighbor == neighborWest)
+        {
+            neighborCellScript.RemoveWall(neighborCellScript.wallEast);
+            RemoveWall(wallWest);
+        }
+    }
+
     public void RemoveWall(GameObject wall)
     {
         if(!wall.activeSelf)
         {
             Debug.Log("Cell " + cellNumber + " tried to remove a nonexistent wall.");
         }
+
+        wall.SetActive(false);
     }
 }
