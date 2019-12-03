@@ -152,9 +152,12 @@ public class Manager : MonoBehaviour
 
         while(!nextCell.GetComponent<Cell>().IsCorner())
         {
+            cellScript.HighlightCell(true);
             yield return new WaitForSeconds(mazePathCarvingSpeed);
+            cellScript.HighlightCell(false);
             visitedCells.Push(nextCell);
             cellScript = nextCell.GetComponent<Cell>();
+            cellScript.HighlightCell(true);
             if(cellScript.unvisitedNeighbors.Count == 0)
             {
                 Debug.Log("Backtracking from " + cellScript.gameObject.name);
@@ -173,9 +176,15 @@ public class Manager : MonoBehaviour
             cellScript.CarvePath(nextCell);
         }
         nextCell.GetComponent<Cell>().CreateEnd();
+        cellScript.HighlightCell(false);
 
         //keep backtracking and filling in unvisited cells
-        while(cellScript.unvisitedNeighbors.Count != 0)
+        //logic:
+        //1. in the previous loop, add every unvisited neighbor to a list.
+        //2. after reaching the corner and designating it as the end (reaching this section of the code),
+        //   backtrack until you reach an unvisited neighbor. explore it, mark new unvisited neighbors, explore them, backtrack
+        //keep doing step 2 until there are no more unvisited neighbors.
+        while (cellScript.unvisitedNeighbors.Count != 0)
         {
             yield return new WaitForSeconds(mazePathCarvingSpeed);
             visitedCells.Push(nextCell);

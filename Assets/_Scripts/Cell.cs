@@ -7,6 +7,9 @@ public class Cell : MonoBehaviour
 {
     Manager manager;
 
+    GameObject floor;
+    Color defaultFloorColor;
+
     public bool hasBeenVisited = false;
     public int cellNumber;
 
@@ -39,7 +42,8 @@ public class Cell : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        floor = transform.Find("Floor").gameObject;
+        defaultFloorColor = floor.GetComponent<MeshRenderer>().material.color;
     }
 
     // Update is called once per frame
@@ -146,9 +150,19 @@ public class Cell : MonoBehaviour
         }
 
 
-
-
         return false;
+    }
+
+    public void HighlightCell(bool highlight)
+    {
+        if(highlight)
+        {
+            floor.GetComponent<MeshRenderer>().material.color = Color.yellow;
+        }
+        else
+        {
+            floor.GetComponent<MeshRenderer>().material.color = defaultFloorColor;
+        }
     }
 
     /// <summary>
