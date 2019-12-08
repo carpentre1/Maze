@@ -154,7 +154,7 @@ MonoBehaviour:
     type: 3}
   mazeGenerationSpeed: 0.02
   mazePathCarvingSpeed: 0.2
-  pathCarvingSpeed: 1
+  pathCarvingSpeed: 0.1
   generationSpeed: 1
   desiredMazeSize: 17
   timesCarved: 0

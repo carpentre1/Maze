@@ -75,6 +75,33 @@ public class Cell : MonoBehaviour
         return i;
     }
 
+    public bool IsTopLeft()
+    {
+        if(cellNumber == manager.desiredMazeSize)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsTopRight()
+    {
+        if (cellNumber == manager.desiredMazeSize * manager.desiredMazeSize)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsBottomRight()
+    {
+        if (cellNumber == (manager.desiredMazeSize * manager.desiredMazeSize) - manager.desiredMazeSize)
+        {
+            return true;
+        }
+        return false;
+    }
+
     public bool IsEdge()
     {
         if (NumberOfNeighbors() == 3)
