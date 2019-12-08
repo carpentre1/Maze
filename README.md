@@ -31,4 +31,15 @@ This is what mazes currently tend to look like:
 
 ![Current Maze Visualization](https://github.com/carpentre1/Maze/blob/master/ss%20(2019-11-20%20at%2008.23.33).png)
 
-As it searches for the corner, it adds its visited cells to a queue. If it finds no more unvisited neighbor cells, it pops cells off the queue until there are new unvisited cells. It runs until it reaches a new corner and stops. All I need to add now is make it continue backtracking and exploring unvisited cells until all cells are visited.
+As it searches for the corner, it adds its visited cells to a stack. If it finds no more unvisited neighbor cells, it pops cells off the stack until there are new unvisited cells. It runs until it reaches a new corner and stops. All I need to add now is make it continue backtracking and exploring unvisited cells until all cells are visited.
+
+
+I've reworked the algorithm again to a straightforward solution for exploring every single cell: it holds a list of all the unvisited cells, and explores randomly, scratching each cell off the list, until it's empty. Any time it reaches a dead end, it pops cells off the visited cell stack to return to a new path to resume exploring.
+
+![Final Maze Visualization](https://github.com/carpentre1/Maze/blob/master/ss%20(2019-12-08%20at%2010.27.16).png)
+
+The end result has the following pros/cons:
++ Mazes look quite complex at first glance
++ Each generated maze is pretty unique from the last
+- The correct paths tend to be long and winding
+- Incorrect paths are typically very short
